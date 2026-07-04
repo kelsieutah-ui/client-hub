@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Buyer Journey, Client Hub</title>
+<meta name="description" content="The buyer journey from first meeting through closing. Fourteen stages with what to expect and what Kelsie needs from you." />
+<link rel="canonical" href="https://clients.kelsiejimenez.com/buyer.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#FDFCFA;--bg-warm:#F8F5EE;--sand:#F2E8D5;--ink:#1C1C1C;--ink-soft:#6E6E68;--forest:#2B3D30;--forest-2:#344A39;--bar:#1b2620;--sage:#99A189;--line:#E8E6DF;--cream:#F2E8D5;--display:"Playfair Display",Georgia,serif;--body:"Times New Roman",Times,serif;--util:"Lato",system-ui,sans-serif;--maxw:1140px;--readw:62ch;}
+*{box-sizing:border-box;}html{scroll-behavior:smooth;scroll-padding-top:80px;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.14rem;line-height:1.78;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 30px;}.read{max-width:var(--readw);}
+h1,h2,h3,h4{font-family:var(--display);font-weight:500;line-height:1.16;margin:0;}
+p{margin:0 0 1.15em;}a{color:var(--forest);text-underline-offset:3px;}
+.label{font-family:var(--util);text-transform:uppercase;letter-spacing:.18em;font-size:.7rem;font-weight:700;color:var(--ink-soft);margin:0 0 18px;display:block;}
+section{padding:64px 0;}.band-warm{background:var(--bg-warm);}
+h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:14px;letter-spacing:.1px;}
+.lede{font-size:1.27rem;line-height:1.66;color:var(--ink);}
+.topbar{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:20;}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px;}
+.topbar .brand{font-family:var(--display);font-size:1.02rem;font-weight:500;color:var(--ink);text-decoration:none;}
+.topbar .brand-sub{display:block;font-family:var(--util);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px;font-weight:700;}
+.topbar nav a{margin-left:22px;font-family:var(--util);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink-soft);text-decoration:none;}
+.topbar nav a:hover,.topbar nav a.on{color:var(--forest);}
+@media (max-width:640px){.topbar nav a{margin-left:14px;font-size:.7rem;letter-spacing:.1em;}}
+.hero-slim{position:relative;min-height:44vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:var(--forest-2);}
+.hero-slim .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.hero-slim .hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,22,18,.42) 0%,rgba(18,22,18,.28) 55%,rgba(18,22,18,.55) 100%);}
+.hero-slim .hero-inner{position:relative;z-index:2;padding:60px 30px 44px;max-width:var(--maxw);margin:0 auto;color:#fff;width:100%;}
+.hero-slim .hero-eyebrow{font-family:var(--util);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;opacity:.9;font-weight:700;margin-bottom:14px;display:block;color:#fff;}
+.hero-slim .hero-title{font-family:var(--display);font-weight:500;font-size:clamp(1.9rem,4.4vw,3rem);line-height:1.1;margin:0;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.5);max-width:22ch;}
+.pull{font-family:'Times New Roman',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.55rem,3vw,2.2rem);line-height:1.32;color:var(--forest);max-width:26ch;margin:22px 0;}
+.panel{border-left:2px solid var(--sage);padding:6px 0 6px 30px;margin-top:16px;}
+.panel .fine{font-family:var(--util);font-size:.92rem;line-height:1.55;color:var(--ink-soft);margin:0;}
+.step{padding-top:34px;padding-bottom:10px;border-top:1px solid var(--line);}
+.step .step-num{font-family:var(--util);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:6px;}
+.step h3{font-size:clamp(1.5rem,2.8vw,1.9rem);margin-bottom:14px;line-height:1.22;}
+.step p{font-size:1.05rem;line-height:1.68;}
+.step ul,.step ol{margin:0 0 1em;padding-left:24px;}
+.step li{margin-bottom:6px;font-size:1.02rem;line-height:1.55;}
+.step h4{font-family:var(--display);font-size:1.16rem;font-weight:500;margin:20px 0 8px;color:var(--forest);}
+.step .callout{border-left:2px solid var(--sage);padding:8px 0 8px 22px;margin:14px 0;font-family:var(--util);font-size:.94rem;color:var(--ink-soft);line-height:1.6;}
+.step .warning{border-left:2px solid #c76666;padding:10px 0 10px 22px;margin:14px 0;font-family:var(--util);font-size:.9rem;color:#7a2020;line-height:1.6;background:#fef7f5;padding-right:16px;}
+.step .warning strong{color:#7a2020;}
+.step .text-line{font-family:var(--util);font-size:.9rem;color:var(--ink-soft);margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);}
+.step .text-line a{color:var(--forest);text-decoration:none;font-weight:700;}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:14px;}
+@media (max-width:720px){.paths{grid-template-columns:1fr;gap:22px;}}
+.path{padding-top:22px;border-top:2px solid var(--forest);text-decoration:none;color:inherit;display:block;}
+.path h3{font-size:1.42rem;margin-bottom:10px;}
+.path p{font-size:1.02rem;line-height:1.6;margin-bottom:10px;}
+.path .go{font-family:var(--util);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--forest);font-weight:700;}
+.contact{font-family:var(--util);font-size:1rem;line-height:1.9;margin-top:10px;}
+.contact a{color:var(--forest);text-decoration:none;}
+.contact a:hover{text-decoration:underline;}
+form{background:var(--bg-warm);border:1px solid var(--line);border-radius:10px;padding:30px 26px;}
+.field{margin-bottom:20px;}
+.field label{display:block;font-family:var(--util);font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px;}
+.field .hint{font-family:var(--util);font-size:.86rem;color:var(--ink-soft);margin:0 0 8px;font-weight:400;line-height:1.45;text-transform:none;letter-spacing:0;}
+.field input,.field textarea,.field select{width:100%;font-family:var(--body);font-size:1.05rem;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:6px;padding:11px 13px;}
+.field textarea{min-height:96px;resize:vertical;}
+.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid var(--sage);outline-offset:1px;border-color:var(--forest);}
+.radio-list{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.radio-list label{display:flex;align-items:center;font-family:var(--body);font-size:1.02rem;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:400;margin:0;}
+.radio-list input{width:auto;margin-right:10px;}
+.q-section{margin-bottom:44px;padding-top:26px;border-top:1px solid var(--line);}
+.q-section:first-of-type{border-top:none;padding-top:0;}
+.q-section h3{font-size:1.4rem;margin-bottom:14px;}
+.q-section .q-eyebrow{font-family:var(--util);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:6px;}
+.btn{appearance:none;cursor:pointer;width:100%;background:var(--forest);color:var(--bg);font-family:var(--util);font-size:1rem;font-weight:700;letter-spacing:.02em;border:none;border-radius:6px;padding:15px 18px;margin-top:8px;transition:background .18s ease;}
+.btn:hover,.btn:focus{background:var(--forest-2);outline:2px solid var(--sage);outline-offset:2px;}
+.form-note{font-family:var(--util);font-size:.82rem;color:var(--ink-soft);margin:12px 0 0;line-height:1.5;}
+footer{background:var(--bg-warm);border-top:1px solid var(--line);padding:44px 0 40px;font-family:var(--util);font-size:.94rem;color:var(--ink-soft);margin-top:40px;}
+footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;}
+@media (max-width:720px){footer .wrap{grid-template-columns:1fr;gap:24px;}}
+footer .fname{font-family:var(--body);color:var(--ink);font-size:1.1rem;}
+footer .fname span{font-family:var(--util);display:block;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;}
+footer a{color:var(--forest);text-decoration:none;}footer a:hover{text-decoration:underline;}
+.disclaimer{font-size:.78rem;line-height:1.6;color:#8B8B84;}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+a.skip{position:absolute;left:-9999px;}
+a.skip:focus{left:16px;top:16px;position:fixed;background:var(--bg);color:var(--forest);padding:10px 16px;border-radius:4px;z-index:50;border:1px solid var(--line);}
+h1 em,h2 em,h3 em,h4 em,.pull{font-family:'Times New Roman',Georgia,serif;font-style:italic;}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="/">Kelsie Jimenez<span class="brand-sub">Client Hub</span></a>
+<nav><a href="buyer.html" class="on">Buyer</a><a href="seller.html" >Seller</a><a href="buyer-questionnaire.html" >Questionnaire</a></nav></div></header>
+
+<section class="hero-slim">
+  <img class="hero-img" src="https://forsalebyowner.kelsiejimenez.com/homes-hero.jpg" alt="A Utah County home under warm morning light" />
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Buyer Journey</span>
+    <h1 class="hero-title">Fourteen stages, one page.</h1>
+  </div>
+</section>
+
+<main id="main">
+<section>
+  <div class="wrap read reveal">
+    <span class="label">How this page works</span>
+    <h2>Read the stage you are in. Text Kelsie when you have a question.</h2>
+    <p class="lede">This whole page is your buyer roadmap. Each stage has what to expect, what to do, and a text line for reaching out. Scroll to your stage, or tap a link Kelsie sends you and land right on it.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap read reveal">
+    <div class="step" id="questionnaire">
+      <div class="step-num">Stage 01</div>
+      <h3>Tell Kelsie About You</h3>
+      <p>Before your first meeting, take a few minutes to fill out your buyer questionnaire. This helps Kelsie understand your goals, timeline, and priorities so your consultation is focused and useful, not generic.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Text Kelsie at 801.420.2284 when your questionnaire is in and we will book the consult.</p>
+    </div>
+    <div class="step" id="consultation">
+      <div class="step-num">Stage 02</div>
+      <h3>Book Your Buyer Consultation</h3>
+      <p>This is a no-pressure conversation to talk through your goals, answer your questions, and make sure you understand exactly how the buying process works in Utah County. Plan for about 30 minutes.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Text 801.420.2284 to book, or tap the calendar link above.</p>
+    </div>
+    <div class="step" id="buyer-broker-agreement">
+      <div class="step-num">Stage 03</div>
+      <h3>Understanding Your Buyer Broker Agreement</h3>
+      <p>Before you start shopping, you'll sign a Buyer Broker Agreement. This video walks you through what it means, what you're agreeing to, and why it protects you.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Questions on the buyer broker agreement, text 801.420.2284 before you sign anything.</p>
+    </div>
+    <div class="step" id="purchase-contract">
+      <div class="step-num">Stage 04</div>
+      <h3>Understanding the Real Estate Purchase Contract</h3>
+      <p>The REPC is the contract you'll sign when you make an offer. It's long and full of legal language, this walkthrough breaks it down section by section in plain English so you know exactly what you're signing.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Questions on any REPC section, text 801.420.2284 and Kelsie will walk you through it.</p>
+    </div>
+    <div class="step" id="pre-approval">
+      <div class="step-num">Stage 05</div>
+      <h3>Get Fully Pre-Approved</h3>
+      <p>There's a difference between pre-qualified and pre-approved. You want to be fully pre-approved before you start shopping, it makes your offers stronger and prevents surprises later. Contact your lender and get the full approval letter, not just a soft estimate.</p><div class="callout"><div>TJ Shelley</div><div>First Colony Home Loans</div><div><a href="tel:8016608661">&#128222; 801-660-8661</a><a href="mailto:tjs@firstcolonymortgage.com">&#9993; tjs@firstcolonymortgage.com</a></div><div>Kelsie recommends TJ but encourages you to loan shop. Getting multiple quotes is always a smart move.</div></div>
+      <p class="text-line"><strong>Text Kelsie:</strong> Text Kelsie your lender's name and estimated close timeline once you are pre-approved.</p>
+    </div>
+    <div class="step" id="shopping">
+      <div class="step-num">Stage 06</div>
+      <h3>Time to Find the One</h3>
+      <p>You're pre-approved and ready to go. Here's what to keep in mind while you're shopping: stay within your pre-approved range, keep your credit clean (no new accounts, no large purchases), and communicate with Kelsie before you fall in love with anything online, not every listing tells the full story.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> See something you like, text Kelsie right away so we can tour before the weekend.</p>
+    </div>
+    <div class="step" id="under-contract">
+      <div class="step-num">Stage 07</div>
+      <h3>You're Under Contract, Here's What Happens Next</h3>
+      <p>Congratulations! From here, several things will happen almost simultaneously. Don't panic, Kelsie will walk you through each one.</p><h4>What's happening right now:</h4><ul><li>Earnest money must be deposited within 4 calendar days</li><li>The seller will send over the Seller Property Condition Disclosure (SPCD)</li><li>Title will send the preliminary title report</li><li>You need to schedule your inspections immediately, your due diligence window has started</li></ul><p>Head to the next steps below to work through each one.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Under contract feels overwhelming, text 801.420.2284 and Kelsie will map the next 30 days for you.</p>
+    </div>
+    <div class="step" id="earnest-money">
+      <div class="step-num">Stage 08</div>
+      <h3>Deposit Your Earnest Money</h3>
+      <p>To keep your contract on track, earnest money must be submitted within 4 calendar days of acceptance. You have three options:</p><ol><li><strong>Cashier's Check</strong>, Obtain from your bank made out to the title company and deliver directly.</li><li><strong>Wire Transfer</strong>, Send funds electronically. Wire fees may apply.</li><li><strong>Mobile Deposit via the Earnest App</strong>, Convenient, though fees may apply.</li></ol><p>Let Kelsie know which method works best and she'll coordinate with the title company to get you instructions.</p><div class="callout">&#9200; <strong>Deadline:</strong> 4 calendar days from contract acceptance. Do not miss this.</div><div class="warning"><strong>&#9888;&#65039; Wire Fraud Warning, Please Read</strong><ul><li>Confirm wire instructions by calling the title company directly using their publicly listed number</li><li>Never trust wire instructions sent only by email</li><li>Never trust a caller providing new or updated wire instructions</li></ul><p style="margin:8px 0 0">When in doubt, call Kelsie first.</p></div>
+      <p class="text-line"><strong>Text Kelsie:</strong> Wire confirmed, text Kelsie a photo of your confirmation so it goes in the file.</p>
+    </div>
+    <div class="step" id="inspections">
+      <div class="step-num">Stage 09</div>
+      <h3>Don't Skip This Part</h3>
+      <p>This is your opportunity to dig in, research, inspect, and feel confident about your investment before you're fully committed.</p><h4>Recommended Inspectors</h4><ul><li><strong>Andy Torgerson</strong>, <a href="tel:8017354642" >360 Home Check, (801) 735-4642</a></li><li><strong>A1 Utah Home Inspectors</strong>, <a href="tel:4357573363" >(435) 757-3363</a></li></ul><p>General Inspection covers structural, mechanical, and overall property condition. Optional add-ons:</p><ul><li>Mold Inspection</li><li>Meth Testing</li><li>Pest / Termite Inspection</li><li>Sewer Scope</li></ul><p><em>Tip: Even with the SPCD, always get your own inspection.</em></p><h4>Title &amp; Property Documents</h4><p>Your title company will send a title report showing the plat map, ownership on record, and any liens or easements. Review carefully along with any HOA documents.</p><h4>Other Things Worth Researching</h4><ul><li><a href="https://www.utah.gov/" target="_blank" rel="noopener" >City Planning / Zoning</a></li><li><a href="https://www.crimemapping.com" target="_blank" rel="noopener" >Crime &amp; Safety Maps</a></li><li><a href="https://www.nsopw.gov/" target="_blank" rel="noopener" >Sex Offender Registry</a></li><li><a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener" >FEMA Flood Maps</a></li><li><a href="https://www.utahcounty.gov/dept/assessor/" target="_blank" rel="noopener" >Property Tax History</a></li><li><a href="https://www.niche.com/k-12/search/best-school-districts/s/utah/" target="_blank" rel="noopener" >School District Ratings</a></li><li><a href="https://air.utah.gov" target="_blank" rel="noopener" >Air Quality</a></li></ul>
+      <p class="text-line"><strong>Text Kelsie:</strong> Inspection scheduled, text Kelsie the date and time so we can plan the report review.</p>
+    </div>
+    <div class="step" id="seller-disclosures">
+      <div class="step-num">Stage 10</div>
+      <h3>Review These Documents Carefully</h3>
+      <h4>Seller Property Condition Disclosure (SPCD)</h4><p>The seller is required to disclose any known issues with the property. Sign and initial to confirm you received and read it. <strong>Important:</strong> signing does not mean you agree with the condition of the home, it only documents that you received it.</p><h4>HOA Documents &amp; CC&amp;Rs (if applicable)</h4><p>Read carefully. These outline monthly fees, rules, and restrictions. No signature required, just read and flag anything that raises a question.</p><h4>Preliminary Title Report</h4><p>The title company will send this showing the plat map, ownership on record, and any recorded liens. Open it, read it, and reply to confirm receipt. Forward anything confusing to Kelsie.</p><h4>Your To-Do List</h4><ul><li>Sign and initial the SPCD</li><li>Read HOA documents if applicable</li><li>Reply to title company to confirm receipt of title report</li></ul>
+      <p class="text-line"><strong>Text Kelsie:</strong> SPCD or HOA doc raises a question, text a photo to 801.420.2284 and we will talk it through.</p>
+    </div>
+    <div class="step" id="appraisal">
+      <div class="step-num">Stage 11</div>
+      <h3>The Appraisal, What to Expect</h3>
+      <p>Your lender will coordinate with you to order the appraisal. An appraiser will visit the home and determine its market value based on comparable sales in the area.</p><p>You don't need to be there. The seller or listing agent will coordinate access.</p><h4>Two Possible Outcomes</h4><ul><li><strong>Appraisal comes in at or above purchase price</strong>, you're good to go, nothing changes.</li><li><strong>Appraisal comes in low</strong>, this means the home appraised for less than your offer price. Kelsie will walk you through your options, which may include negotiating with the seller, making up the difference, or in some cases canceling the contract depending on your REPC terms.</li></ul><p>Appraisals typically take 1, 2 weeks to complete. Your lender will notify you when it's in.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Once the appraisal is ordered, text Kelsie the ordered date and we will watch for the result together.</p>
+    </div>
+    <div class="step" id="clear-to-close">
+      <div class="step-num">Stage 12</div>
+      <h3>Clear to Close, The Magic Words</h3>
+      <p>Clear to Close means your lender has fully reviewed and approved your loan. This is one of the best things you'll hear during this process.</p><h4>What It Means</h4><ul><li>Your income, assets, credit, and the property have all been verified</li><li>The underwriter has signed off</li><li>You are approved to close</li></ul><h4>What Happens Next</h4><ul><li>Title will prepare your final closing disclosure</li><li>You'll review the closing disclosure, compare it to your loan estimate and flag anything that looks different</li><li>Closing will be scheduled, usually within a few days</li></ul><p>At this point you are on the finish line. Do not make any large purchases, open new credit accounts, or change jobs before you close. Even at this stage it can affect your loan.</p><h4>Setting Up Utilities Before You Move In</h4><p>Schedule phone-based utilities (electric, gas, water) to turn on the day of signing. For services requiring installation (internet, cable, security) wait until after possession.</p><ul><li><strong>Electric:</strong> Rocky Mountain Power, (888) 221-7070</li><li><strong>Gas:</strong> Enbridge Gas, (800) 323-5517</li></ul>
+      <p class="text-line"><strong>Text Kelsie:</strong> Clear to close means you should not open new credit or make large purchases. Questions, text Kelsie.</p>
+    </div>
+    <div class="step" id="final-walkthrough">
+      <div class="step-num">Stage 13</div>
+      <h3>Final Walkthrough, This Is a Confirmation, Not an Inspection</h3>
+      <p>No earlier than 7 days before closing, you have the right to walk through the property to confirm it's in the same condition as when you went under contract.</p><h4>What You're Checking</h4><ul><li>All agreed-upon repairs have been completed</li><li>Nothing has been removed that was supposed to stay (appliances, fixtures, etc.)</li><li>Property is broom clean</li><li>No new damage has occurred</li></ul><p>Bring your inspection report and walk through every room. Run the appliances, turn on faucets, flush toilets, check the garage door. If something is wrong, contact Kelsie immediately, do not wait until closing day.</p><p><strong>Important:</strong> From contract acceptance through closing, the seller cannot make major alterations to the property, take on new financial encumbrances, or accept new short-term rental bookings without your written consent.</p>
+      <p class="text-line"><strong>Text Kelsie:</strong> Something looks off on the walkthrough, text Kelsie before you sign anything.</p>
+    </div>
+    <div class="step" id="closing-day">
+      <div class="step-num">Stage 14</div>
+      <h3>Closing Day, You Made It</h3>
+      <h4>What to Bring</h4><ul><li>Government-issued photo ID</li><li>Wire confirmation (if you haven't already wired funds)</li></ul><h4>What to Expect</h4><ul><li>Plan for 1, 2 hours of signing</li><li>Title will walk you through every document</li><li>Once everything is signed and recorded, keys are yours</li></ul><h4>Possession and Keys</h4><p>Possession follows the terms in your REPC. If your contract states "possession upon recording," the seller releases keys only after the deed has been recorded with the county.</p><p>If signing happens later in the day, recording may not happen until the next business day. For example, signing Friday afternoon may mean recording, and keys, on Monday. The county processes recordings in order received and this cannot be rushed. Kelsie will keep you updated the moment it records.</p><h4>Don't Forget to Update Your Address Everywhere</h4>
+      <p class="text-line"><strong>Text Kelsie:</strong> Recording confirmed and keys in hand, text Kelsie a photo. Best text of the year.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band-warm">
+  <div class="wrap read reveal">
+    <span class="label">Always available</span>
+    <h2>Text is the fastest.</h2>
+    <p>Any question, any stage, any time. Kelsie reads every message and gets back the same day when she can, next business day at the latest.</p>
+    <div class="contact">
+      <a href="tel:+18014202284">801.420.2284</a><br/>
+      <a href="mailto:kelsie.jimenez@theperry.group">kelsie.jimenez@theperry.group</a>
+    </div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">
+<div>
+<div class="fname">Kelsie Jimenez<span>The Perry Group | Real Broker LLC</span></div>
+<p style="margin-top:14px;">2168 W Grove Pkwy, Suite 225<br/>Pleasant Grove, UT 84062</p>
+<p><a href="tel:+18014202284">801.420.2284</a> &nbsp;&middot;&nbsp; <a href="mailto:kelsie.jimenez@theperry.group">kelsie.jimenez@theperry.group</a></p>
+<p>Utah Real Estate License 11407496-SA00</p>
+</div>
+<div><p class="disclaimer">This is a private client resource. Not for distribution. Every transaction is different, this hub is a general roadmap, not legal or tax advice. Reach out with questions any time.</p></div>
+</div></footer>
+<script>(function(){var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;var items=document.querySelectorAll('.reveal');if(reduce||!('IntersectionObserver' in window)){items.forEach(function(el){el.classList.add('in');});return;}var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:0.12});items.forEach(function(el){obs.observe(el);});})();</script>
+</body></html>
