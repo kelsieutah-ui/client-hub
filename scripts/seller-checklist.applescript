@@ -1,20 +1,36 @@
 -- seller-checklist.applescript
 -- Client-facing seller journey list. Prompts for full name and first name,
--- creates a Reminders list "[Full Name], Seller" with all transaction tasks.
--- Client-facing tasks carry the matching stage snippet as their body, with
--- [First Name] replaced. Admin-only tasks stay note-less.
+-- creates a Reminders list "[Full Name], Seller" via AppleScript, then adds
+-- every task via the reminders CLI (~/Sites/client-hub/scripts/bin/reminders).
+-- The CLI writes notes reliably through EventKit, which AppleScript's own
+-- Reminders scripting bridge does not.
+--
+-- Task list, order, and section headers are canonical, sourced from Kelsie's
+-- Reminders workflow snapshot on 2026-07-04. Do not reorder without her sign-off.
 --
 -- Snippets sourced from:
 -- /Users/kelsiejimenez/Documents/Obsidian Vault/Business Brain/Systems & SOPs/Stage-Text-Snippets.md
 
+property REMINDERS_BIN : "/Users/kelsiejimenez/Sites/client-hub/scripts/bin/reminders"
+
 on replaceText(theText, oldStr, newStr)
+	-- Do NOT rename "joined" to "result", it is a reserved AppleScript keyword
+	-- that silently produces empty string when used as a local variable. 2026-07-04.
 	set AppleScript's text item delimiters to oldStr
 	set parts to text items of theText
 	set AppleScript's text item delimiters to newStr
-	set result to parts as text
+	set joined to parts as text
 	set AppleScript's text item delimiters to ""
-	return result
+	return joined
 end replaceText
+
+on addTask(listName, taskTitle, noteBody)
+	if noteBody is "" then
+		do shell script (quoted form of REMINDERS_BIN) & " add " & (quoted form of listName) & " " & (quoted form of taskTitle)
+	else
+		do shell script (quoted form of REMINDERS_BIN) & " add " & (quoted form of listName) & " " & (quoted form of taskTitle) & " --notes " & (quoted form of noteBody)
+	end if
+end addTask
 
 set fullName to text returned of (display dialog "Client full name:" default answer "" with title "New Seller Checklist")
 if fullName is "" then return
@@ -28,156 +44,151 @@ if firstName is "" then set firstName to firstNameDefault
 
 set listName to fullName & ", Seller"
 
-set snippet_01 to "Hi [First Name]! Here is where we start: getting your home ready to earn top dollar. This is my full prep playbook, the same one I use on every listing. Read the parts that apply and I will walk the house with you before we touch a thing: https://clients.kelsiejimenez.com/seller.html#pre-listing-prep"
-set snippet_02 to "Hi [First Name]! Quick one. Here is your short list of action items before photos. Nothing overwhelming, just the handful of things that make the biggest difference on camera: https://clients.kelsiejimenez.com/seller.html#action-items. Text me if anything on the list feels like a project and we will figure it out together."
-set snippet_03 to "Hi [First Name]! I am building your MLS listing this week. Here is what I need from you and why it matters for how buyers find your home: https://clients.kelsiejimenez.com/seller.html#mls-input-sheet. A few minutes now means your listing goes live clean and complete."
-set snippet_04 to "Hi [First Name]! Photo day is coming up. Here is exactly how to have the house ready so it photographs like a magazine spread: https://clients.kelsiejimenez.com/seller.html#photo-day. Do not stress about perfect. I will do a walkthrough before the photographer starts."
-set snippet_05 to "[First Name], we are LIVE! Here is what happens in the first 72 hours and what to expect with showings: https://clients.kelsiejimenez.com/seller.html#go-live. Keep your phone close, keep the house show-ready, and let me handle the rest."
-set snippet_06 to "Hi [First Name]! Offer activity time. Here is how I evaluate offers with you, because price is only one piece of a strong offer: https://clients.kelsiejimenez.com/seller.html#offers. When one comes in, we will go through it line by line together."
-set snippet_07 to "[First Name], we are under contract! Congratulations. Here is your map of what happens between now and closing so nothing catches you off guard: https://clients.kelsiejimenez.com/seller.html#under-contract. I will keep you posted at every checkpoint."
-set snippet_08 to "Hi [First Name]! Closing paperwork is starting to move. Here is what you will be signing and what to double check before you do: https://clients.kelsiejimenez.com/seller.html#closing-disclosures. Any number that looks off, screenshot it and text me before signing."
-set snippet_09 to "[First Name], closing day! Here is what to bring, how long it takes, and when the money actually lands: https://clients.kelsiejimenez.com/seller.html#closing-day. Almost there."
-set snippet_10 to "Hi [First Name]! It is official. Here are the loose ends to tie up after closing, utilities, records, and a couple things people always forget: https://clients.kelsiejimenez.com/seller.html#after-close. It has been an honor. I am always one text away, for you and for anyone you love who needs a straight-shooting agent."
+-- --- Snippet templates. [First Name] gets substituted below. ---
+set snippet_questionnaire to "Hi [First Name]! First step is easy. Fill out your seller questionnaire so I can tailor everything to your home and your timeline: https://clients.kelsiejimenez.com/seller-questionnaire.html. Takes about five minutes."
+set snippet_calendly to "Hi [First Name]! Let us get your listing consultation on the calendar. Grab whatever time works best for you here: https://calendly.com/kelsie-utah/30min. Come with questions, all of them are fair game."
+set snippet_prelisting to "Hi [First Name]! Here is where we start: getting your home ready to earn top dollar. This is my full prep playbook, the same one I use on every listing. Read the parts that apply and I will walk the house with you before we touch a thing: https://clients.kelsiejimenez.com/seller.html#pre-listing-prep"
+set snippet_actionitems to "Hi [First Name]! Quick one. Here is your short list of action items before photos. Nothing overwhelming, just the handful of things that make the biggest difference on camera: https://clients.kelsiejimenez.com/seller.html#action-items. Text me if anything on the list feels like a project and we will figure it out together."
+set snippet_mls to "Hi [First Name]! I am building your MLS listing this week. Here is what I need from you and why it matters for how buyers find your home: https://clients.kelsiejimenez.com/seller.html#mls-input-sheet. A few minutes now means your listing goes live clean and complete."
+set snippet_photoday to "Hi [First Name]! Photo day is coming up. Here is exactly how to have the house ready so it photographs like a magazine spread: https://clients.kelsiejimenez.com/seller.html#photo-day. Do not stress about perfect. I will do a walkthrough before the photographer starts."
+set snippet_golive to "[First Name], we are LIVE! Here is what happens in the first 72 hours and what to expect with showings: https://clients.kelsiejimenez.com/seller.html#go-live. Keep your phone close, keep the house show-ready, and let me handle the rest."
+set snippet_offers to "Hi [First Name]! Offer activity time. Here is how I evaluate offers with you, because price is only one piece of a strong offer: https://clients.kelsiejimenez.com/seller.html#offers. When one comes in, we will go through it line by line together."
+set snippet_undercontract to "[First Name], we are under contract! Congratulations. Here is your map of what happens between now and closing so nothing catches you off guard: https://clients.kelsiejimenez.com/seller.html#under-contract. I will keep you posted at every checkpoint."
+set snippet_closingdisc to "Hi [First Name]! Closing paperwork is starting to move. Here is what you will be signing and what to double check before you do: https://clients.kelsiejimenez.com/seller.html#closing-disclosures. Any number that looks off, screenshot it and text me before signing."
+set snippet_closingday to "[First Name], closing day! Here is what to bring, how long it takes, and when the money actually lands: https://clients.kelsiejimenez.com/seller.html#closing-day. Almost there."
+set snippet_afterclose to "Hi [First Name]! It is official. Here are the loose ends to tie up after closing, utilities, records, and a couple things people always forget: https://clients.kelsiejimenez.com/seller.html#after-close. It has been an honor. I am always one text away, for you and for anyone you love who needs a straight-shooting agent."
 
-set s01 to my replaceText(snippet_01, "[First Name]", firstName)
-set s02 to my replaceText(snippet_02, "[First Name]", firstName)
-set s03 to my replaceText(snippet_03, "[First Name]", firstName)
-set s04 to my replaceText(snippet_04, "[First Name]", firstName)
-set s05 to my replaceText(snippet_05, "[First Name]", firstName)
-set s06 to my replaceText(snippet_06, "[First Name]", firstName)
-set s07 to my replaceText(snippet_07, "[First Name]", firstName)
-set s08 to my replaceText(snippet_08, "[First Name]", firstName)
-set s09 to my replaceText(snippet_09, "[First Name]", firstName)
-set s10 to my replaceText(snippet_10, "[First Name]", firstName)
+set s_questionnaire to my replaceText(snippet_questionnaire, "[First Name]", firstName)
+set s_calendly to my replaceText(snippet_calendly, "[First Name]", firstName)
+set s_prelisting to my replaceText(snippet_prelisting, "[First Name]", firstName)
+set s_actionitems to my replaceText(snippet_actionitems, "[First Name]", firstName)
+set s_mls to my replaceText(snippet_mls, "[First Name]", firstName)
+set s_photoday to my replaceText(snippet_photoday, "[First Name]", firstName)
+set s_golive to my replaceText(snippet_golive, "[First Name]", firstName)
+set s_offers to my replaceText(snippet_offers, "[First Name]", firstName)
+set s_undercontract to my replaceText(snippet_undercontract, "[First Name]", firstName)
+set s_closingdisc to my replaceText(snippet_closingdisc, "[First Name]", firstName)
+set s_closingday to my replaceText(snippet_closingday, "[First Name]", firstName)
+set s_afterclose to my replaceText(snippet_afterclose, "[First Name]", firstName)
 
+-- --- Create the list up front ---
 tell application "Reminders"
-	repeat with l in lists
-		if name of l is listName then
-			display dialog "A list named " & quote & listName & quote & " already exists." buttons {"OK"} default button "OK"
-			return
-		end if
+	set nameList to name of lists
+	set alreadyExists to false
+	repeat with n in nameList
+		if (n as text) is listName then set alreadyExists to true
 	end repeat
-
-	set targetList to make new list with properties {name:listName}
-
-	-- [PRE-LIST]
-	make new reminder at end of targetList with properties {name:"[PRE-LIST]"}
-	make new reminder at end of targetList with properties {name:"Send Seller Questionnaire"}
-	make new reminder at end of targetList with properties {name:"Update Seller Questionnaire info"}
-	make new reminder at end of targetList with properties {name:"Drop off Pre-Listing Paint Bucket"}
-	make new reminder at end of targetList with properties {name:"Set Birthdates into Calendar"}
-	make new reminder at end of targetList with properties {name:"Post on story about listing appt"}
-	make new reminder at end of targetList with properties {name:"Send ERS Loom video"}
-	make new reminder at end of targetList with properties {name:"Schedule Listing Appointment"}
-	make new reminder at end of targetList with properties {name:"Sign ERS/Media Waiver/Title Docs"}
-	make new reminder at end of targetList with properties {name:"Screenshot Zestimate"}
-	make new reminder at end of targetList with properties {name:"Send Action Items email template"}
-	make new reminder at end of targetList with properties {name:"Verify Ownership Tax Record / PR Title / Trust Docs"}
-	make new reminder at end of targetList with properties {name:"Collect Mortgage Payoff Amounts"}
-	make new reminder at end of targetList with properties {name:"Create Seller Net Sheet"}
-	make new reminder at end of targetList with properties {name:"Pre Home Inspection walkthrough"}
-	make new reminder at end of targetList with properties {name:"Send MLS Input Sheet Email Template"}
-	make new reminder at end of targetList with properties {name:"Research Subject Property / pre-CMA"}
-	make new reminder at end of targetList with properties {name:"Collect extra key"}
-	make new reminder at end of targetList with properties {name:"Collect required Disclosures: LBP, SPCD, MLS Input"}
-	make new reminder at end of targetList with properties {name:"Collect HOA information if applicable"}
-	make new reminder at end of targetList with properties {name:"Verify SqFt / MLS Input sheet"}
-	make new reminder at end of targetList with properties {name:"Schedule staging if applicable"}
-	make new reminder at end of targetList with properties {name:"Email Photo Day guide to client"}
-	make new reminder at end of targetList with properties {name:"Final Walkthrough before photos"}
-	make new reminder at end of targetList with properties {name:"Add key to Supra / drop off marketing materials"}
-	make new reminder at end of targetList with properties {name:"Marketing Plan booklet"}
-	make new reminder at end of targetList with properties {name:"Schedule photos"}
-	make new reminder at end of targetList with properties {name:"Enter into MLS and write Listing description"}
-	make new reminder at end of targetList with properties {name:"Verify SPCD before going live"}
-
-	-- [JUST BEFORE LIVE]
-	make new reminder at end of targetList with properties {name:"[JUST BEFORE LIVE]"}
-	make new reminder at end of targetList with properties {name:"Schedule pricing meeting"}
-	make new reminder at end of targetList with properties {name:"Market Deep Dive"}
-	make new reminder at end of targetList with properties {name:"CMA packet"}
-	make new reminder at end of targetList with properties {name:"Showing Preferences Requested Email"}
-	make new reminder at end of targetList with properties {name:"Start Canva Folder for Property Address"}
-	make new reminder at end of targetList with properties {name:"Special Features Cards Throughout Home Created"}
-	make new reminder at end of targetList with properties {name:"Listing Flyer Created"}
-	make new reminder at end of targetList with properties {name:"Send Just Listed postcard"}
-	make new reminder at end of targetList with properties {name:"Confirm sign and lockbox are there"}
-	make new reminder at end of targetList with properties {name:"Organize photos into MLS"}
-	make new reminder at end of targetList with properties {name:"Confirm price and Listing Date"}
-	make new reminder at end of targetList with properties {name:"Make listing active on MLS"}
-
-	-- [LAUNCH]
-	make new reminder at end of targetList with properties {name:"[LAUNCH]"}
-	make new reminder at end of targetList with properties {name:"Update Showing Preferences into Aligned"}
-	make new reminder at end of targetList with properties {name:"Text \"It's Live\" MLS link to Sellers"}
-	make new reminder at end of targetList with properties {name:"Order print materials"}
-	make new reminder at end of targetList with properties {name:"Pick Up Print Materials"}
-	make new reminder at end of targetList with properties {name:"Add Open House to MLS and Facebook Events"}
-	make new reminder at end of targetList with properties {name:"Postcard QR - Send Postcards"}
-	make new reminder at end of targetList with properties {name:"Share to relevant Facebook Groups"}
-	make new reminder at end of targetList with properties {name:"B-Roll Videos / Reels Created"}
-
-	-- [ACTIVE LISTED]
-	make new reminder at end of targetList with properties {name:"[ACTIVE LISTED]"}
-	make new reminder at end of targetList with properties {name:"Feedback from showings - update Sellers"}
-	make new reminder at end of targetList with properties {name:"Open House Scheduled / Added as Facebook Event"}
-	make new reminder at end of targetList with properties {name:"MLS Stats weekly"}
-	make new reminder at end of targetList with properties {name:"Zillow Showcase Stats Report at 2 weeks"}
-	make new reminder at end of targetList with properties {name:"Facebook Marketplace Ad"}
-	make new reminder at end of targetList with properties {name:"Set up Aligned Showings or adjust if needed"}
-	make new reminder at end of targetList with properties {name:"Drop Just Listed boxes (10 or more)"}
-	make new reminder at end of targetList with properties {name:"Deliver Flyers to nearby businesses"}
-	make new reminder at end of targetList with properties {name:"Invite neighbors to Open House"}
-
-	-- [OFFERS / UNDER CONTRACT]
-	make new reminder at end of targetList with properties {name:"[OFFERS / UNDER CONTRACT]"}
-	make new reminder at end of targetList with properties {name:"Send Loom for REPC for Sellers"}
-	make new reminder at end of targetList with properties {name:"Update MLS status"}
-	make new reminder at end of targetList with properties {name:"Notify interested parties"}
-	make new reminder at end of targetList with properties {name:"Send Loom for Under Contract Roadmap for Sellers"}
-	make new reminder at end of targetList with properties {name:"Send Crumble for Under Contract celebration"}
-	make new reminder at end of targetList with properties {name:"Schedule staging clean-up"}
-	make new reminder at end of targetList with properties {name:"Confirm Home Inspection Requests with Sellers"}
-	make new reminder at end of targetList with properties {name:"Remind clients to schedule Utilities / change of address"}
-	make new reminder at end of targetList with properties {name:"Schedule Final Walkthrough with Sellers"}
-	make new reminder at end of targetList with properties {name:"Gather leads from open house / add to CRM"}
-	make new reminder at end of targetList with properties {name:"Send Under Contract postcards"}
-
-	-- [PRE-CLOSING]
-	make new reminder at end of targetList with properties {name:"[PRE-CLOSING]"}
-	make new reminder at end of targetList with properties {name:"Send address change checklist email"}
-	make new reminder at end of targetList with properties {name:"Confirm sellers did repairs"}
-	make new reminder at end of targetList with properties {name:"Schedule Closing - notify agent"}
-	make new reminder at end of targetList with properties {name:"Put closing on calendar"}
-	make new reminder at end of targetList with properties {name:"Order closing gift"}
-	make new reminder at end of targetList with properties {name:"Confirm de-staging"}
-	make new reminder at end of targetList with properties {name:"Send Confirm Seller Closing Disclosures Received"}
-
-	-- [POST CLOSING]
-	make new reminder at end of targetList with properties {name:"[POST CLOSING]"}
-	make new reminder at end of targetList with properties {name:"Social Media Post"}
-	make new reminder at end of targetList with properties {name:"Put Client on Anniversary Calendar"}
-	make new reminder at end of targetList with properties {name:"Add / Update Clients in database email list"}
-	make new reminder at end of targetList with properties {name:"Update Zillow sales / MLS"}
-	make new reminder at end of targetList with properties {name:"Send Just Sold postcards to neighborhood"}
-	make new reminder at end of targetList with properties {name:"Send Google / Zillow review request"}
-	make new reminder at end of targetList with properties {name:"Update Card Closing Date"}
-	make new reminder at end of targetList with properties {name:"Move to Long Term Follow Up"}
-
-	-- ============ PHASE 2: settle, look up by name, apply bodies ============
-
-	tell application "System Events" to delay 2
-
-	set body of (first reminder of targetList whose name is "Send ERS Loom video") to s01
-	set body of (first reminder of targetList whose name is "Send Action Items email template") to s02
-	set body of (first reminder of targetList whose name is "Send MLS Input Sheet Email Template") to s03
-	set body of (first reminder of targetList whose name is "Email Photo Day guide to client") to s04
-	set body of (first reminder of targetList whose name is "Text \"It's Live\" MLS link to Sellers") to s05
-	set body of (first reminder of targetList whose name is "Send Loom for REPC for Sellers") to s06
-	set body of (first reminder of targetList whose name is "Send Loom for Under Contract Roadmap for Sellers") to s07
-	set body of (first reminder of targetList whose name is "Send Confirm Seller Closing Disclosures Received") to s08
-	set body of (first reminder of targetList whose name is "Put closing on calendar") to s09
-	set body of (first reminder of targetList whose name is "Send Google / Zillow review request") to s10
+	if alreadyExists then
+		display dialog "A list named " & quote & listName & quote & " already exists." buttons {"OK"} default button "OK"
+		return
+	end if
+	make new list with properties {name:listName}
 end tell
+
+-- --- Populate every task through the reminders CLI ---
+
+-- [PRE-LISTING]
+my addTask(listName, "[PRE-LISTING]", "")
+my addTask(listName, "Send Seller Questionnaire", s_questionnaire)
+my addTask(listName, "Update Seller Questionnaire information collected", "")
+my addTask(listName, "Drop off Pre-Listing paint bucket", "")
+my addTask(listName, "Send Listing appt Calendly", s_calendly)
+my addTask(listName, "Set collected birthdays in calendar", "")
+my addTask(listName, "Post on story about listing appt.", "")
+my addTask(listName, "Send ERS Loom video", s_prelisting)
+my addTask(listName, "Sign ERS/media waiver/title docs", "")
+my addTask(listName, "Screenshot Estimate", "")
+my addTask(listName, "Send Action items email template", s_actionitems)
+my addTask(listName, "Verify Ownership Tax Records/ PR Title/ Trust Docs", "")
+my addTask(listName, "Collect Mortgage Payoff Amounts", "")
+my addTask(listName, "Create Seller Net Sheet and Send Seller Net Calculator Webpage", "")
+my addTask(listName, "Pre Home Inspection Walkthrough", "")
+my addTask(listName, "Send MLS Input Sheet Email Template", s_mls)
+my addTask(listName, "Research Subject Property/ Pre-CMA", "")
+my addTask(listName, "Collect extra key", "")
+my addTask(listName, "Collect required Disclosures: LBP, SPCD, MLS Input", "")
+my addTask(listName, "Collect HOA information if applicable", "")
+my addTask(listName, "Verify sq/ft MLS input sheet", "")
+my addTask(listName, "Schedule staging if applicable", "")
+my addTask(listName, "Email Photo Day guide to client", s_photoday)
+my addTask(listName, "Final walkthrough before photos", "")
+my addTask(listName, "Add key to Supra/ drop off marketing materials", "")
+my addTask(listName, "Marketing plan booklet", "")
+my addTask(listName, "Schedule photos", "")
+my addTask(listName, "Verify SPCD before going live", "")
+
+-- [LISTING PREP]
+my addTask(listName, "[LISTING PREP]", "")
+my addTask(listName, "Schedule Pricing Meeting", "")
+my addTask(listName, "Market Deep Dive", "")
+my addTask(listName, "CMA packet", "")
+my addTask(listName, "Showing Preferences Requested Email", "")
+my addTask(listName, "Start Canva Folder for Property Address", "")
+my addTask(listName, "Special Features Cards Throughout Home Created", "")
+my addTask(listName, "Listing Flyer Created", "")
+my addTask(listName, "Send Just Listed postcard", "")
+my addTask(listName, "Confirm sign and lockbox are there", "")
+my addTask(listName, "Organize photos into MLS", "")
+my addTask(listName, "Enter into MLS and write Listing description", "")
+my addTask(listName, "Confirm price and Listing Date", "")
+my addTask(listName, "Make listing active on MLS", "")
+
+-- [GO LIVE]
+my addTask(listName, "[GO LIVE]", "")
+my addTask(listName, "Update Showing Preferences into Aligned", "")
+my addTask(listName, "Text Its Live MLS link to Sellers", s_golive)
+my addTask(listName, "Order Print Materials", "")
+my addTask(listName, "Pick up Print Materials", "")
+my addTask(listName, "Add Open House to MLS and Facebook Events", "")
+my addTask(listName, "Postcard QR Send Postcards", "")
+my addTask(listName, "Share to relevant Facebook Groups", "")
+my addTask(listName, "B-roll Videos / Reels Created", "")
+
+-- [ACTIVE]
+my addTask(listName, "[ACTIVE]", "")
+my addTask(listName, "Feedback from showings update Sellers", "")
+my addTask(listName, "Open House Scheduled/ Added as Facebook event", "")
+my addTask(listName, "MLS stats weekly", "")
+my addTask(listName, "Zillow showcase stats report at 2 weeks out", "")
+my addTask(listName, "Facebook marketplace ad", "")
+my addTask(listName, "Set up Aligned Showings or adjust if needed", "")
+my addTask(listName, "Drop just listed boxes 10 or more", "")
+my addTask(listName, "Deliver flyers to nearby businesses", "")
+my addTask(listName, "Invite neighbors to Open House", "")
+
+-- [UNDER CONTRACT]
+my addTask(listName, "[UNDER CONTRACT]", "")
+my addTask(listName, "Send Loom for REPC to Sellers", s_offers)
+my addTask(listName, "Update MLS status", "")
+my addTask(listName, "Notify interested parties", "")
+my addTask(listName, "Send Loom for Under contract roadmap for Sellers", s_undercontract)
+my addTask(listName, "Send Crumble cookies for Under Contract celebration", "")
+my addTask(listName, "Schedule staging clean-up", "")
+my addTask(listName, "Confirm home inspection requests with sellers", "")
+my addTask(listName, "Remind client to schedule utilities/change of address with moving resource guide", "")
+my addTask(listName, "Schedule final walk through with sellers", "")
+my addTask(listName, "Gather leads from Open House/ add to CRM", "")
+my addTask(listName, "Send Under Contract postcards", "")
+
+-- [PRE-CLOSING]
+my addTask(listName, "[PRE-CLOSING]", "")
+my addTask(listName, "Send address change checklist email", "")
+my addTask(listName, "Confirm Sellers did repairs", "")
+my addTask(listName, "Schedule closing notify agent", "")
+my addTask(listName, "Put closing on calendar", s_closingday)
+my addTask(listName, "Order closing gift", "")
+my addTask(listName, "Confirm de-staging", "")
+my addTask(listName, "Send confirm seller closing disclosure received", s_closingdisc)
+
+-- [CLOSED]
+my addTask(listName, "[CLOSED]", "")
+my addTask(listName, "Social media post", "")
+my addTask(listName, "Put client on anniversary calendar", "")
+my addTask(listName, "Add/update clients in database email list", "")
+my addTask(listName, "Update zillow sales/MLS", "")
+my addTask(listName, "Send just sold postcards to neighborhood", "")
+my addTask(listName, "Send google/zillow review request", s_afterclose)
+my addTask(listName, "Update client closing date in CRM", "")
+my addTask(listName, "Move to Long Term Follow Up", "")
 
 display notification quote & listName & quote & " created in Reminders" with title "Seller Checklist Created"

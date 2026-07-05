@@ -1,25 +1,38 @@
 -- buyer-checklist.applescript
 -- Prompts for full name (list name) and first name (personalized in snippets).
--- Creates a Reminders list "[Full Name], Buyer" with the full transaction task
--- set. Client-facing tasks carry the matching stage snippet in the notes body,
--- with [First Name] replaced. Admin-only tasks stay note-less.
+-- Creates a Reminders list "[Full Name], Buyer" via AppleScript, then adds every
+-- task by calling the reminders CLI (~/Sites/client-hub/scripts/bin/reminders).
+-- Uses the CLI because AppleScript's Reminders scripting silently drops the
+-- body/notes property on this system (macOS 14.6), and Apple's Shortcuts GUI
+-- editor kept regressing our task-splitting shortcut.
 --
--- Structure (2026-07-04): tasks are created in phase 1 (names only). Bodies
--- are applied in phase 2 by looking up the reminder by name, after a settle
--- delay. Setting body via saved refs from batch creation is unreliable in
--- macOS Reminders; lookup-by-name is the pattern that consistently persists.
+-- The `reminders` binary is by Keith Smiley: github.com/keith/reminders-cli.
+-- It talks to Reminders through EventKit, which is the canonical write path.
 --
 -- Snippets sourced from:
 -- /Users/kelsiejimenez/Documents/Obsidian Vault/Business Brain/Systems & SOPs/Stage-Text-Snippets.md
 
+property REMINDERS_BIN : "/Users/kelsiejimenez/Sites/client-hub/scripts/bin/reminders"
+
 on replaceText(theText, oldStr, newStr)
+	-- Note: do NOT use "result" as a local variable here. AppleScript reserves it
+	-- to hold the last statement's return value, and using it silently produces
+	-- empty output. Learned the hard way, 2026-07-04.
 	set AppleScript's text item delimiters to oldStr
 	set parts to text items of theText
 	set AppleScript's text item delimiters to newStr
-	set result to parts as text
+	set joined to parts as text
 	set AppleScript's text item delimiters to ""
-	return result
+	return joined
 end replaceText
+
+on addTask(listName, taskTitle, noteBody)
+	if noteBody is "" then
+		do shell script (quoted form of REMINDERS_BIN) & " add " & (quoted form of listName) & " " & (quoted form of taskTitle)
+	else
+		do shell script (quoted form of REMINDERS_BIN) & " add " & (quoted form of listName) & " " & (quoted form of taskTitle) & " --notes " & (quoted form of noteBody)
+	end if
+end addTask
 
 set fullName to text returned of (display dialog "Client full name:" default answer "" with title "New Buyer Checklist")
 if fullName is "" then return
@@ -35,7 +48,7 @@ set listName to fullName & ", Buyer"
 
 -- Snippet templates. [First Name] gets substituted below.
 set snippet_01 to "Hi [First Name]! First step is easy. Fill out your buyer questionnaire so I can make our consult about YOUR goals, not a generic pitch: https://clients.kelsiejimenez.com/buyer-questionnaire.html. Takes about five minutes."
-set snippet_02 to "Hi [First Name]! Before we meet, here is what your buyer consultation covers and how to get the most out of it: https://clients.kelsiejimenez.com/buyer.html#consultation. Come with questions. All of them are fair game."
+set snippet_02 to "Hi [First Name]! Let us get your buyer consultation on the calendar. Grab whatever time works best for you here: https://calendly.com/kelsie-utah/30min. Come with questions, all of them are fair game."
 set snippet_03 to "Hi [First Name]! Before we start touring, you will sign a Buyer Broker Agreement. Here is what it means in plain English and why it protects you: https://clients.kelsiejimenez.com/buyer.html#buyer-broker-agreement. Questions before you sign anything, text me."
 set snippet_04 to "Hi [First Name]! Here is how the Utah purchase contract works, what the key sections mean, and where your protections live: https://clients.kelsiejimenez.com/buyer.html#purchase-contract. We will go through the real thing together before you ever sign."
 set snippet_05 to "Hi [First Name]! Time to get your pre-approval. Here is what lenders look at, what documents to gather, and why this comes before touring homes: https://clients.kelsiejimenez.com/buyer.html#pre-approval. Need a lender recommendation? Text me and I will connect you."
@@ -64,106 +77,93 @@ set s12 to my replaceText(snippet_12, "[First Name]", firstName)
 set s13 to my replaceText(snippet_13, "[First Name]", firstName)
 set s14 to my replaceText(snippet_14, "[First Name]", firstName)
 
+-- Create the list up front so the Shortcut's Add New Reminder finds it.
 tell application "Reminders"
-	repeat with l in lists
-		if name of l is listName then
-			display dialog "A list named " & quote & listName & quote & " already exists." buttons {"OK"} default button "OK"
-			return
+	set nameList to name of lists
+	set alreadyExists to false
+	repeat with n in nameList
+		if (n as text) is listName then
+			set alreadyExists to true
+			exit repeat
 		end if
 	end repeat
-
-	set targetList to make new list with properties {name:listName}
-
-	-- ============ PHASE 1: create all tasks with names only ============
-
-	-- [LEAD INTAKE]
-	make new reminder at end of targetList with properties {name:"[LEAD INTAKE]"}
-	make new reminder at end of targetList with properties {name:"Email link of Buyers Questionnaire"}
-	make new reminder at end of targetList with properties {name:"Input client in CRM"}
-	make new reminder at end of targetList with properties {name:"Input client contact information in phone"}
-	make new reminder at end of targetList with properties {name:"Prep for consult"}
-	make new reminder at end of targetList with properties {name:"Get Pre-approval from Lender"}
-	make new reminder at end of targetList with properties {name:"Add Lending notes to file"}
-
-	-- [BUYER CONSULTATION]
-	make new reminder at end of targetList with properties {name:"[BUYER CONSULTATION]"}
-	make new reminder at end of targetList with properties {name:"Needs and Wants Paper"}
-	make new reminder at end of targetList with properties {name:"BBA Loom sent"}
-	make new reminder at end of targetList with properties {name:"REPC Paper Copy Highlighted"}
-	make new reminder at end of targetList with properties {name:"Buyers Guide Roadmap"}
-	make new reminder at end of targetList with properties {name:"Schedule Consultation"}
-	make new reminder at end of targetList with properties {name:"Timeline confirmed"}
-	make new reminder at end of targetList with properties {name:"Budget and Rate Confirmed"}
-	make new reminder at end of targetList with properties {name:"Set up search criteria in MLS"}
-	make new reminder at end of targetList with properties {name:"Set up Listing Alerts"}
-
-	-- [OFFERING]
-	make new reminder at end of targetList with properties {name:"[OFFERING]"}
-	make new reminder at end of targetList with properties {name:"Refine preferences"}
-	make new reminder at end of targetList with properties {name:"Market update weekly"}
-	make new reminder at end of targetList with properties {name:"Weekly follow-up"}
-	make new reminder at end of targetList with properties {name:"CMA before UC"}
-	make new reminder at end of targetList with properties {name:"Review UC stages with weekly tips"}
-
-	-- [UNDER CONTRACT]
-	make new reminder at end of targetList with properties {name:"[UNDER CONTRACT]"}
-	make new reminder at end of targetList with properties {name:"Submit REPC to TPG stats"}
-	make new reminder at end of targetList with properties {name:"Input Dates / Contract information"}
-	make new reminder at end of targetList with properties {name:"Send Congrats Earnest Money email template"}
-	make new reminder at end of targetList with properties {name:"Send Seller Disclosure Deadline email template"}
-	make new reminder at end of targetList with properties {name:"Send Know Before You Buy Due Diligence Checklist email"}
-	make new reminder at end of targetList with properties {name:"Pre-closing Reminder Set Up"}
-	make new reminder at end of targetList with properties {name:"Earnest Money Collected"}
-	make new reminder at end of targetList with properties {name:"Schedule Inspections"}
-	make new reminder at end of targetList with properties {name:"Confirm Inspection with Listing Agent"}
-	make new reminder at end of targetList with properties {name:"Review PR / Title"}
-	make new reminder at end of targetList with properties {name:"Repair Requests Negotiated"}
-	make new reminder at end of targetList with properties {name:"Confirm Appraisal Ordered"}
-
-	-- [PRE-CLOSING]
-	make new reminder at end of targetList with properties {name:"[PRE-CLOSING]"}
-	make new reminder at end of targetList with properties {name:"Send address change checklist with links"}
-	make new reminder at end of targetList with properties {name:"Send One Last Thing Before Keys / Utilities email"}
-	make new reminder at end of targetList with properties {name:"Schedule Final Walkthrough"}
-	make new reminder at end of targetList with properties {name:"Plan and Order Closing Gift"}
-	make new reminder at end of targetList with properties {name:"Final Walkthrough Performed"}
-	make new reminder at end of targetList with properties {name:"Prepare Closing Congrats Card and Review Card"}
-	make new reminder at end of targetList with properties {name:"Schedule Closing with Title"}
-	make new reminder at end of targetList with properties {name:"Send Settlement Day What to Expect Email"}
-	make new reminder at end of targetList with properties {name:"Coordinate Keys with Listing Agent"}
-	make new reminder at end of targetList with properties {name:"Send Before You Unpack / Enroll Kids in School email"}
-	make new reminder at end of targetList with properties {name:"Send Pack This Box First / Packing Guidance Email"}
-
-	-- [CLOSED]
-	make new reminder at end of targetList with properties {name:"[CLOSED]"}
-	make new reminder at end of targetList with properties {name:"Text clients to ask for a review"}
-	make new reminder at end of targetList with properties {name:"Create IG post"}
-	make new reminder at end of targetList with properties {name:"Update Zillow sale"}
-	make new reminder at end of targetList with properties {name:"Add Buyer to popby list"}
-	make new reminder at end of targetList with properties {name:"Homeowner resources sent"}
-	make new reminder at end of targetList with properties {name:"Client added to newsletter"}
-	make new reminder at end of targetList with properties {name:"Add Home Anniversary reminder in calendar"}
-	make new reminder at end of targetList with properties {name:"Update Clients New Address"}
-	make new reminder at end of targetList with properties {name:"Move to Long Term Follow Up"}
-
-	-- ============ PHASE 2: settle, look up by name, apply bodies ============
-
-	tell application "System Events" to delay 2
-
-	set body of (first reminder of targetList whose name is "Email link of Buyers Questionnaire") to s01
-	set body of (first reminder of targetList whose name is "Schedule Consultation") to s02
-	set body of (first reminder of targetList whose name is "BBA Loom sent") to s03
-	set body of (first reminder of targetList whose name is "REPC Paper Copy Highlighted") to s04
-	set body of (first reminder of targetList whose name is "Get Pre-approval from Lender") to s05
-	set body of (first reminder of targetList whose name is "Refine preferences") to s06
-	set body of (first reminder of targetList whose name is "Send Congrats Earnest Money email template") to s07
-	set body of (first reminder of targetList whose name is "Earnest Money Collected") to s08
-	set body of (first reminder of targetList whose name is "Send Know Before You Buy Due Diligence Checklist email") to s09
-	set body of (first reminder of targetList whose name is "Send Seller Disclosure Deadline email template") to s10
-	set body of (first reminder of targetList whose name is "Confirm Appraisal Ordered") to s11
-	set body of (first reminder of targetList whose name is "Send One Last Thing Before Keys / Utilities email") to s12
-	set body of (first reminder of targetList whose name is "Schedule Final Walkthrough") to s13
-	set body of (first reminder of targetList whose name is "Send Settlement Day What to Expect Email") to s14
+	if alreadyExists then
+		display dialog "A list named " & quote & listName & quote & " already exists." buttons {"OK"} default button "OK"
+		return
+	end if
+	make new list with properties {name:listName}
 end tell
+
+-- Populate every task through the Shortcut. Empty note for admin-only tasks.
+
+-- [LEAD INTAKE]
+my addTask(listName, "[LEAD INTAKE]", "")
+my addTask(listName, "Email link of Buyers Questionnaire", s01)
+my addTask(listName, "Input client in CRM", "")
+my addTask(listName, "Input client contact information in phone", "")
+my addTask(listName, "Prep for consult", "")
+my addTask(listName, "Get Pre-approval from Lender", s05)
+my addTask(listName, "Add Lending notes to file", "")
+
+-- [BUYER CONSULTATION]
+my addTask(listName, "[BUYER CONSULTATION]", "")
+my addTask(listName, "Needs and Wants Paper", "")
+my addTask(listName, "BBA Loom sent", s03)
+my addTask(listName, "REPC Paper Copy Highlighted", s04)
+my addTask(listName, "Buyers Guide Roadmap", "")
+my addTask(listName, "Schedule Consultation", s02)
+my addTask(listName, "Timeline confirmed", "")
+my addTask(listName, "Budget and Rate Confirmed", "")
+my addTask(listName, "Set up search criteria in MLS", "")
+my addTask(listName, "Set up Listing Alerts", "")
+
+-- [OFFERING]
+my addTask(listName, "[OFFERING]", "")
+my addTask(listName, "Refine preferences", s06)
+my addTask(listName, "Market update weekly", "")
+my addTask(listName, "Weekly follow-up", "")
+my addTask(listName, "CMA before UC", "")
+my addTask(listName, "Review UC stages with weekly tips", "")
+
+-- [UNDER CONTRACT]
+my addTask(listName, "[UNDER CONTRACT]", "")
+my addTask(listName, "Submit REPC to TPG stats", "")
+my addTask(listName, "Input Dates / Contract information", "")
+my addTask(listName, "Send Congrats Earnest Money email template", s07)
+my addTask(listName, "Send Seller Disclosure Deadline email template", s10)
+my addTask(listName, "Send Know Before You Buy Due Diligence Checklist email", s09)
+my addTask(listName, "Pre-closing Reminder Set Up", "")
+my addTask(listName, "Earnest Money Collected", s08)
+my addTask(listName, "Schedule Inspections", "")
+my addTask(listName, "Confirm Inspection with Listing Agent", "")
+my addTask(listName, "Review PR / Title", "")
+my addTask(listName, "Repair Requests Negotiated", "")
+my addTask(listName, "Confirm Appraisal Ordered", s11)
+
+-- [PRE-CLOSING]
+my addTask(listName, "[PRE-CLOSING]", "")
+my addTask(listName, "Send address change checklist with links", "")
+my addTask(listName, "Send One Last Thing Before Keys / Utilities email", s12)
+my addTask(listName, "Schedule Final Walkthrough", s13)
+my addTask(listName, "Plan and Order Closing Gift", "")
+my addTask(listName, "Final Walkthrough Performed", "")
+my addTask(listName, "Prepare Closing Congrats Card and Review Card", "")
+my addTask(listName, "Schedule Closing with Title", "")
+my addTask(listName, "Send Settlement Day What to Expect Email", s14)
+my addTask(listName, "Coordinate Keys with Listing Agent", "")
+my addTask(listName, "Send Before You Unpack / Enroll Kids in School email", "")
+my addTask(listName, "Send Pack This Box First / Packing Guidance Email", "")
+
+-- [CLOSED]
+my addTask(listName, "[CLOSED]", "")
+my addTask(listName, "Text clients to ask for a review", "")
+my addTask(listName, "Create IG post", "")
+my addTask(listName, "Update Zillow sale", "")
+my addTask(listName, "Add Buyer to popby list", "")
+my addTask(listName, "Homeowner resources sent", "")
+my addTask(listName, "Client added to newsletter", "")
+my addTask(listName, "Add Home Anniversary reminder in calendar", "")
+my addTask(listName, "Update Clients New Address", "")
+my addTask(listName, "Move to Long Term Follow Up", "")
 
 display notification quote & listName & quote & " created in Reminders" with title "Buyer Checklist Created"
