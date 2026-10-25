@@ -102,6 +102,14 @@ def theme_overlay(theme,im,g,t,rng_state):
             if k>0:
                 y=-40+vy*k*k*260
                 if y<H+40: pie(g,x0+math.sin(k*3+x0)*6,y,s,0)
+    elif theme=='snow':
+        for (x0,y0,s,sp,ph) in rng_state:
+            k=t-0.3
+            if k>0:
+                y=(y0+sp*k*45)%(H+30)-15; x=x0+math.sin(k*1.5+ph)*10
+                a=min(1,k/1.5)
+                c=tuple(int(255*a) for _ in range(3))
+                g.ellipse(((x-s)*S,(y-s)*S,(x+s)*S,(y+s)*S),fill=c)
     elif theme in ('newyear','sparkle'):
         for (x,y,s,ph) in rng_state:
             k=t-2.0
@@ -118,6 +126,12 @@ def theme_state(theme):
     if theme=='pie':
         xs=[420,560,700,840,490,630,770,880,380]
         return [(x+rnd.uniform(-15,15),rnd.uniform(0,1.3),rnd.uniform(26,34),rnd.uniform(.9,1.2)) for x in xs]
+    if theme=='snow':
+        out=[]
+        while len(out)<34:
+            x,y=rnd.uniform(5,W-5),rnd.uniform(0,H)
+            if (x-cx)**2+(y-cy)**2>(RR+8)**2: out.append((x,y,rnd.uniform(1.2,3.2),rnd.uniform(0.6,1.4),rnd.uniform(0,6.28)))
+        return out
     if theme in ('newyear','sparkle'):
         pts=[]
         while len(pts)<30:
@@ -126,15 +140,15 @@ def theme_state(theme):
         return pts
     return None
 
-DEFAULT_TAG={'halloween':'Happy Halloween','pie':'Pie Night  ·  Nov 23','newyear':'Happy New Year','plain':'','sparkle':''}
-DUR={'plain':3.5,'halloween':5.2,'pie':5.0,'newyear':5.5,'sparkle':5.0}
+DEFAULT_TAG={'snow':'Happy Holidays','halloween':'Happy Halloween','pie':'Pie Night  ·  Nov 23','newyear':'Happy New Year','plain':'','sparkle':''}
+DUR={'snow':5.0,'plain':3.5,'halloween':5.2,'pie':5.0,'newyear':5.5,'sparkle':5.0}
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('theme'); ap.add_argument('--tagline'); ap.add_argument('--out',default='banner.gif'); ap.add_argument('--width',type=int,default=920); ap.add_argument('--name',choices=['script','print'],default='script')
     a=ap.parse_args(); theme=a.theme; tag=a.tagline if a.tagline is not None else DEFAULT_TAG.get(theme,'')
     base,name=build_base(a.name); st=theme_state(theme); T=DUR.get(theme,4); fps=20
     tmp=tempfile.mkdtemp(); n=int(T*fps)+1
-    tag_start={'halloween':4.0,'pie':4.1,'newyear':2.6,'sparkle':2.6}.get(theme,2.6)
+    tag_start={'snow':2.6,'halloween':4.0,'pie':4.1,'newyear':2.6,'sparkle':2.6}.get(theme,2.6)
     for i in range(n):
         t=i/fps; im=base.copy(); g=signature(im,name,t); glint(g,t,2.45)
         if st: theme_overlay(theme,im,g,t,st)
