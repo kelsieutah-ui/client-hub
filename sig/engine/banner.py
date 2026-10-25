@@ -75,12 +75,54 @@ def bat(g,x,y,s,flap,col):
     g.polygon([((x+px*s)*S,(y+py*s)*S) for px,py in pts],fill=col)
     g.ellipse(((x-.12*s)*S,(y-.22*s)*S,(x+.12*s)*S,(y+.12*s)*S),fill=col)
 
-def pie(g,x,y,s,rot,col_crust=(214,160,82),col_fill=(170,30,45)):
-    g.ellipse(((x-s)*S,(y-s*.45)*S,(x+s)*S,(y+s*.45)*S),fill=col_crust)
-    g.ellipse(((x-s*.82)*S,(y-s*.36)*S,(x+s*.82)*S,(y+s*.30)*S),fill=col_fill)
-    for i in range(-2,3):   # lattice
-        ox=i*s*.32; g.line(((x+ox-s*.15)*S,(y-s*.33)*S,(x+ox+s*.15)*S,(y+s*.28)*S),fill=col_crust,width=max(2,int(s*.12*S)))
-        oy=i*s*.13; g.line(((x-s*.78)*S,(y+oy)*S,(x+s*.78)*S,(y+oy)*S),fill=col_crust,width=max(2,int(s*.10*S)))
+_PIE_CACHE={}
+def _pie_sprite(kind):
+    if kind in _PIE_CACHE: return _PIE_CACHE[kind]
+    from PIL import ImageFilter
+    D=400; R=190; c=D/2
+    im=Image.new('RGBA',(D,D),(0,0,0,0)); d=ImageDraw.Draw(im)
+    # fluted crust edge
+    pts=[]
+    for i in range(360):
+        a=math.radians(i); r=R*(1+0.035*math.cos(a*26))
+        pts.append((c+r*math.cos(a),c+r*math.sin(a)))
+    d.polygon(pts,fill=(196,138,66,255))
+    d.ellipse((c-R*.93,c-R*.93,c+R*.93,c+R*.93),fill=(222,170,96,255))
+    d.ellipse((c-R*.86,c-R*.86,c+R*.86,c+R*.86),fill=(205,150,78,255))
+    # filling with soft radial gradient
+    fill=Image.new('RGBA',(D,D),(0,0,0,0)); fd=ImageDraw.Draw(fill)
+    if kind=='pumpkin': inner,outer=(236,146,58),(196,102,34)
+    else: inner,outer=(214,150,70),(170,100,40)
+    steps=40
+    for k in range(steps):
+        t=k/(steps-1); r=R*.80*(1-t*.98)
+        col=tuple(int(outer[j]+(inner[j]-outer[j])*t) for j in range(3))+(255,)
+        fd.ellipse((c-r,c-r,c+r,c+r),fill=col)
+    im.alpha_composite(fill)
+    if kind=='lattice':
+        strip=Image.new('RGBA',(D,D),(0,0,0,0)); sd=ImageDraw.Draw(strip)
+        for i in range(-2,3):
+            o=i*R*.32
+            sd.line((c+o,c-R*.8,c+o,c+R*.8),fill=(226,176,104,255),width=int(R*.17))
+            sd.line((c-R*.8,c+o,c+R*.8,c+o),fill=(214,162,92,255),width=int(R*.17))
+        m=Image.new('L',(D,D),0); ImageDraw.Draw(m).ellipse((c-R*.82,c-R*.82,c+R*.82,c+R*.82),fill=255)
+        strip.putalpha(ImageChops.multiply(strip.getchannel('A'),m)); im.alpha_composite(strip)
+    # glossy highlight
+    hl=Image.new('RGBA',(D,D),(0,0,0,0)); ImageDraw.Draw(hl).ellipse((c-R*.55,c-R*.62,c+R*.05,c-R*.18),fill=(255,240,210,70))
+    hl=hl.filter(ImageFilter.GaussianBlur(14)); im.alpha_composite(hl)
+    _PIE_CACHE[kind]=im; return im
+
+def pie(im,x,y,s,rot,tilt,kind='pumpkin'):
+    spr=_pie_sprite(kind)
+    w=int(2*s*S); squash=max(0.18,abs(math.cos(tilt))); h=max(2,int(w*squash))
+    thick=int(s*S*0.28*abs(math.sin(tilt)))
+    layer=Image.new('RGBA',(w,h+thick+2),(0,0,0,0)); ld=ImageDraw.Draw(layer)
+    if thick>0:  # crust side band
+        ld.ellipse((0,thick,w-1,thick+h-1),fill=(150,98,44,255))
+        ld.rectangle((0,h//2,w-1,thick+h//2),fill=(150,98,44,255))
+    top=spr.resize((w,h),Image.LANCZOS); layer.alpha_composite(top,(0,0))
+    layer=layer.rotate(rot,resample=Image.BICUBIC,expand=True)
+    im.paste(layer,(int(x*S-layer.width/2),int(y*S-layer.height/2)),layer)
 
 def sparkle(g,x,y,s,col):
     for ang in (0,90):
@@ -101,7 +143,7 @@ def theme_overlay(theme,im,g,t,rng_state):
             k=t-2.2-delay
             if k>0:
                 y=-40+vy*k*k*260
-                if y<H+40: pie(g,x0+math.sin(k*3+x0)*6,y,s,0)
+                if y<H+50: pie(im,x0+math.sin(k*3+x0)*6,y,s,math.sin(k*2+x0)*35,k*3.2+x0,'lattice' if int(x0)%4==0 else 'pumpkin')
     elif theme=='snow':
         for (x0,y0,s,sp,ph) in rng_state:
             k=t-0.3
@@ -124,8 +166,8 @@ def theme_state(theme):
     if theme=='halloween':
         return [(rnd.uniform(40,360),rnd.uniform(200,290),rnd.uniform(1.7,2.3),rnd.uniform(30,42),rnd.uniform(0,6)) for _ in range(5)]
     if theme=='pie':
-        xs=[420,560,700,840,490,630,770,880,380]
-        return [(x+rnd.uniform(-15,15),rnd.uniform(0,1.3),rnd.uniform(26,34),rnd.uniform(.9,1.2)) for x in xs]
+        xs=[450,620,790,540,710,870]
+        return [(x+rnd.uniform(-15,15),rnd.uniform(0,1.4),rnd.uniform(40,50),rnd.uniform(.85,1.1)) for x in xs]
     if theme=='snow':
         out=[]
         while len(out)<34:
