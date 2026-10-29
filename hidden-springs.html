@@ -13,6 +13,10 @@
   gtag('js', new Date());
   gtag('config', 'G-YQR8LKWMLH');
 </script>
+<script id="kj-lead-events">
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="sms:"],a[href^="tel:"]');if(a&&window.gtag){gtag('event',a.getAttribute('href').indexOf('sms:')===0?'text_me_click':'call_click',{link_url:a.getAttribute('href'),page_title:document.title,transport_type:'beacon'});}},true);
+document.addEventListener('submit',function(e){if(window.gtag){gtag('event','generate_lead',{form_id:(e.target&&e.target.id)||'',page_title:document.title,transport_type:'beacon'});}},true);
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
