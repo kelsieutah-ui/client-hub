@@ -1,9 +1,20 @@
 {
-  "current_theme": "halloween",
-  "current_name_style": "script",
-  "current_tagline": "Happy Halloween",
-  "updated": "2026-10-24",
+  "current_theme": "pie",
+  "current_name_style": "print",
+  "current_tagline": "Pie Night  ·  Nov 23",
+  "updated": "2026-11-01",
   "history": [
-    {"date": "2026-10-24", "theme": "halloween", "name_style": "script", "tagline": "Happy Halloween"}
+    {
+      "date": "2026-10-24",
+      "theme": "halloween",
+      "name_style": "script",
+      "tagline": "Happy Halloween"
+    },
+    {
+      "date": "2026-11-01",
+      "theme": "pie",
+      "name_style": "print",
+      "tagline": "Pie Night  ·  Nov 23"
+    }
   ]
 }
