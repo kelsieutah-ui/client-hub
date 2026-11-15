@@ -1,8 +1,8 @@
 {
   "current_theme": "pie",
-  "current_name_style": "print",
+  "current_name_style": "script",
   "current_tagline": "Pie Night  ·  Nov 23",
-  "updated": "2026-11-01",
+  "updated": "2026-11-15",
   "history": [
     {
       "date": "2026-10-24",
@@ -14,6 +14,12 @@
       "date": "2026-11-01",
       "theme": "pie",
       "name_style": "print",
+      "tagline": "Pie Night  ·  Nov 23"
+    },
+    {
+      "date": "2026-11-15",
+      "theme": "pie",
+      "name_style": "script",
       "tagline": "Pie Night  ·  Nov 23"
     }
   ]
