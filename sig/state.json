@@ -1,8 +1,8 @@
 {
-  "current_theme": "pie",
-  "current_name_style": "script",
-  "current_tagline": "Pie Night  ·  Nov 23",
-  "updated": "2026-11-15",
+  "current_theme": "turkey",
+  "current_name_style": "print",
+  "current_tagline": "Happy Thanksgiving",
+  "updated": "2026-11-24",
   "history": [
     {
       "date": "2026-10-24",
@@ -21,6 +21,12 @@
       "theme": "pie",
       "name_style": "script",
       "tagline": "Pie Night  ·  Nov 23"
+    },
+    {
+      "date": "2026-11-24",
+      "theme": "turkey",
+      "name_style": "print",
+      "tagline": "Happy Thanksgiving"
     }
   ]
 }
